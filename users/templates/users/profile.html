@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Профиль</h1>
+    {% include 'includes/messages.html' %}
+    
+    <div class="card mb-4" style="max-width: 540px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+          {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" class="img-fluid rounded-start" alt="Аватар">
+          {% else %}
+            <img src="{% static 'img/default_avatar.png' %}" class="img-fluid rounded-start" alt="Аватар по умолчанию">
+          {% endif %}
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{ user.get_full_name|default:user.username }}</h5>
+            <p class="card-text"><strong>Имя пользователя:</strong> {{ user.username }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+            <p class="card-text"><strong>Телефон:</strong> {{ user.phone|default:"Не указан" }}</p>
+            <p class="card-text"><strong>Страна:</strong> {{ user.country|default:"Не указана" }}</p>
+            <a href="{% url 'users:profile_update' %}" class="btn btn-primary">Редактировать профиль</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

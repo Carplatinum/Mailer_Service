@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}Попытки рассылок{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Попытки рассылок</h1>
+
+    <!-- Блок с сообщениями Django -->
+    {% include 'includes/messages.html' %}
+
+    {% if attempts %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Рассылка</th>
+                    <th scope="col">Время попытки</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Ответ сервера</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr>
+                    <th scope="row">{{ attempt.id }}</th>
+                    <td>
+                        <a href="{% url 'mailing:mailing_detail' attempt.mailing.id %}">
+                            Рассылка #{{ attempt.mailing.id }}
+                        </a>
+                    </td>
+                    <td>{{ attempt.attempt_time|date:"d.m.Y H:i:s" }}</td>
+                    <td>
+                        {% if attempt.status == 'success' %}
+                            <span class="badge bg-success">Успешно</span>
+                        {% elif attempt.status == 'failed' %}
+                            <span class="badge bg-danger">Ошибка</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ attempt.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if attempt.server_response %}
+                            <pre class="mb-0" style="white-space: pre-wrap;">{{ attempt.server_response }}</pre>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Пагинация, если используется в views -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            {% endif %}
+
+            {% for num in paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <p>Попыток рассылок не найдено.</p>
+    {% endif %}
+
+    <a href="{% url 'mailing:mailing_list' %}" class="btn btn-secondary mt-3">Назад к рассылкам</a>
+</div>
+{% endblock %}

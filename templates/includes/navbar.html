@@ -1,0 +1,61 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'mailing:mailing_list' %}">Mailing Project</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Переключить навигацию">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mailing:mailing_list' %}">Рассылки</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mailing:message_list' %}">Сообщения</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mailing:recipient_list' %}">Получатели</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mailing:mailing_attempt_list' %}">Попытки рассылок</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+              {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" alt="avatar" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+              {% else %}
+                <span class="me-2"><i class="bi bi-person-circle" style="font-size:1.3rem;"></i></span>
+              {% endif %}
+              {{ user.get_full_name|default:user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{% url 'users:profile' %}">Профиль</a></li>
+              <li><a class="dropdown-item" href="{% url 'users:profile_update' %}">Редактировать профиль</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="post" action="{% url 'users:logout' %}" class="m-0">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">Выйти</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
