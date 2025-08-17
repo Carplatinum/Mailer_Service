@@ -3,6 +3,7 @@ from .views import (
     UserRegisterView, UserLoginView, UserLogoutView,
     UserPasswordResetView, UserPasswordResetDoneView,
     UserPasswordResetConfirmView, UserPasswordResetCompleteView,
+    profile_view, profile_update_view,
 )
 
 app_name = 'users'
@@ -20,4 +21,7 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('reset/done/', UserPasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+
+    path('profile/', profile_view, name='profile'),
+    path('profile/update/', profile_update_view, name='profile_update'),
 ]
