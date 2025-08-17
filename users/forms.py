@@ -10,7 +10,6 @@ class CustomUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Добавляем bootstrap классы для админки (если нужно)
         for field_name, field in self.fields.items():
             css_class = field.widget.attrs.get('class', '')
             field.widget.attrs['class'] = (css_class + ' form-control').strip()
@@ -29,9 +28,8 @@ class CustomUserChangeForm(UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Добавляем bootstrap классы для админки (если нужно)
         for field_name, field in self.fields.items():
             if field_name == 'password':
-                continue  # Не стилизуем поле пароля
+                continue
             css_class = field.widget.attrs.get('class', '')
             field.widget.attrs['class'] = (css_class + ' form-control').strip()
